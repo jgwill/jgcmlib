@@ -138,3 +138,14 @@ def save_as_json(output,workdir,scprefix,sc_namespace_suffix,suffix=""):
     json.dump(output, f, indent=4)
     return f"{workdir}/{scprefix}{sc_namespace_suffix}.json"
   return None
+
+
+
+
+import requests
+def run_inference_query(payload,api_url,headers = {
+	"Accept" : "application/json",
+	"Content-Type": "application/json" 
+}):
+  response = requests.post(api_url, headers=headers, json=payload)
+  return response.json()
