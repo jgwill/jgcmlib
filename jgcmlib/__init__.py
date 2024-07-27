@@ -120,13 +120,15 @@ def get_generated_text_from_json(filepath):
 
 
 # Get all json files in the directory './data/' + workdir
-def get_json_files_list(workdir):
+def get_json_files_list(workdir,exclude_input_prompts=True):
     json_files = []
     working_directory_path = './' + workdir
     print('Working directory path: ' + working_directory_path)
     for file in os.listdir(working_directory_path):
         if file.endswith('.json'):
             json_files.append(file)
+        if file.endswith('-input_prompts.json') and exclude_input_prompts:
+            json_files.remove(file)
     return json_files
 
 
