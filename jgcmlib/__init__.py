@@ -15,7 +15,10 @@ def postprocess_abc(text, conversation_id="test",musescore_bin = "musescore3",us
     #if not os.path.isfile(musescore_bin):
     #    musescore_bin = "musescore"
     
-    os.makedirs(f"{workdir}/{conversation_id}", exist_ok=True)
+    if workdir == "":
+      workdir="."
+    if conversation_id != "": 
+      os.makedirs(f"{workdir}/{conversation_id}", exist_ok=True)
     abc_pattern_extractor_str = r'(X:\d+\n(?:[^\n]*\n)+)'
     extracted_abc_notation_from_text = re.findall(abc_pattern_extractor_str, text+'\n')
     if not quiet:
@@ -32,7 +35,7 @@ def postprocess_abc(text, conversation_id="test",musescore_bin = "musescore3",us
         
         # Convert abc notation to midi
         res_midi_filepath = mkns_filepath(conversation_id, workdir, sc_namespace_suffix,"mid")
-        subprocess.run([abc2midiExecutable, str(res_abc_filepath), "-o", res_midi_filepath])
+        _convert_abc_2_midi(res_abc_filepath, res_midi_filepath)
         
         # Convert abc notation to SVG
         res_musicsheet_svg_filepath = mkns_filepath(conversation_id, workdir, sc_namespace_suffix,"svg")
@@ -40,8 +43,8 @@ def postprocess_abc(text, conversation_id="test",musescore_bin = "musescore3",us
         
         capture_output_of_command = True if not quiet else False
         
-        subprocess.run([musescore_bin, "-o", res_musicsheet_svg_filepath, res_midi_filepath], capture_output=capture_output_of_command, text=True)
-        subprocess.run([musescore_bin,"-o", res_audio_filepath, res_midi_filepath])
+        _convert_midi_2_score(res_midi_filepath, res_musicsheet_svg_filepath, capture_output_of_command,musescore_bin=musescore_bin)
+        _convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin=musescore_bin)
         
         # Fix the SVG file path (from ChatMusician, why do they do that ?)
         res_musicsheet_svg_filepath_fixed = mkns_filepath(conversation_id, workdir, sc_namespace_suffix,"svg","-1")
@@ -57,6 +60,15 @@ def postprocess_abc(text, conversation_id="test",musescore_bin = "musescore3",us
         return res_musicsheet_svg_filepath_fixed, res_audio_filepath,res_abc_filepath,res_midi_filepath
     else:
         return None, None 
+
+def _convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin = "musescore3"):
+    subprocess.run([musescore_bin,"-o", res_audio_filepath, res_midi_filepath])
+
+def _convert_midi_2_score(res_midi_filepath, res_musicsheet_svg_filepath, capture_output_of_command,musescore_bin = "musescore3"):
+    subprocess.run([musescore_bin, "-o", res_musicsheet_svg_filepath, res_midi_filepath], capture_output=capture_output_of_command, text=True)
+
+def _convert_abc_2_midi(res_abc_filepath, res_midi_filepath,abc2midiExecutable = "abc2midi"):
+    subprocess.run([abc2midiExecutable, str(res_abc_filepath), "-o", res_midi_filepath])
 
 def newsc_namespace_suffix(prefix, use_tlider=True):
   ts_or_tlid = _newts_suffix(use_tlider)
