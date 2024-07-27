@@ -136,7 +136,8 @@ def save_as_json(output,workdir,scprefix,sc_namespace_suffix,suffix=""):
   filepath=f"{workdir}/{scprefix}{sc_namespace_suffix}{suffix}.json"
   with open(filepath, 'w') as f:
     json.dump(output, f, indent=4)
-    return f"{workdir}/{scprefix}{sc_namespace_suffix}.json"
+    print("written: ",filepath)
+    return filepath
   return None
 
 
