@@ -12,7 +12,11 @@ def pto_post_just_an_abc_file(filepath,musescore_bin = "musescore3",abc2midiExec
   res_musicsheet_svg_filepath=os.path.join(output_dir, filebase.replace(".abc",".svg"))
   
   jcm._convert_abc_2_midi(filepath, res_midi_filepath,abc2midiExecutable=abc2midiExecutable)
-  jcm._convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin=musescore_bin)
+  try:
+    jcm._convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin=musescore_bin)
+  except:
+    musescore_bin="musescore"
+    jcm._convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin=musescore_bin)
   jcm._convert_midi_2_score(filepath, res_musicsheet_svg_filepath,musescore_bin=musescore_bin)
   return res_musicsheet_svg_filepath, res_audio_filepath, res_midi_filepath
 
