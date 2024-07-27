@@ -5,6 +5,7 @@ setup(
     version='1.0.0',
     author='J.Guillaume D-Isabelle',
     description='A Python module jgcmlib',
+    url='https://github.com/jgwill/jgcmlib',
     packages=find_packages(),
     install_requires=[
         "tlid",
