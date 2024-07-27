@@ -23,9 +23,8 @@ pypi-release:
 
 .PHONY: release
 release:
-    VERSION=$(python setup.py --version)
+	VERSION=$(python setup.py --version)
 	make dist
-    git tag -s ${VERSION} -m "Release version ${VERSION}"
-    git push origin ${VERSION}
+	git tag -s ${VERSION} -m "Release version ${VERSION}"
+	git push origin ${VERSION}
 	make pypi-release
-
