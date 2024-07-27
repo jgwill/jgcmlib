@@ -31,7 +31,7 @@ bump_version:
 release:
 	make bump_version
 	make dist
-	git tag -s $(version) -m "Release version $(version)"
+	git tag  $(version) -m "Release version $(version)"
 	git push origin $(version)
 	make pypi-release
 
