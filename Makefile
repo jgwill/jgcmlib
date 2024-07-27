@@ -24,14 +24,14 @@ pypi-release:
 
 .PHONY: bump_version
 bump_version:
-    version2=$(shell python bump_version.py)
-    git commit -m "Bump version"
+	python bump_version.py
+	git commit . -m "Bump version"
 
 .PHONY: release
 release:
-	version2=$(shell python bump_version.py)
+	make bump_version
 	make dist
-	git tag -s $(version) -m "Release version $(version2)"
+	git tag -s $(version) -m "Release version $(version)"
 	git push origin $(version)
 	make pypi-release
 
@@ -39,4 +39,3 @@ release:
 tstv:
 	version2=$(shell python bump_version.py)
 	echo "version: $(version)"
-	echo "version2: $(version2)"
