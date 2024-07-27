@@ -13,7 +13,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            # Add any console scripts or entry points here
+            "jgabcli = jgcmlib.jgabcli:main"
         ]
     },
 )
