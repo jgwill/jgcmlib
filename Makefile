@@ -1,3 +1,4 @@
+version := $(shell python setup.py --version)
 
 .PHONY: clean
 clean:
@@ -23,8 +24,11 @@ pypi-release:
 
 .PHONY: release
 release:
-	VERSION=$(python setup.py --version)
 	make dist
-	git tag -s ${VERSION} -m "Release version ${VERSION}"
-	git push origin ${VERSION}
+	git tag -s $(version) -m "Release version $(version)"
+	git push origin $(version)
 	make pypi-release
+
+.PHONY: tstv
+tstv:
+	echo "version: $(version)"
