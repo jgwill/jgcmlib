@@ -24,7 +24,7 @@ pypi-release:
 
 .PHONY: release
 release:
-	version2 := $(shell python bump_version.py)
+	version2=$(shell python bump_version.py)
 	make dist
 	git tag -s $(version2) -m "Release version $(version2)"
 	git push origin $(version2)

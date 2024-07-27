@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='jgcmlib',
-    version='1.0.3',
+    version='1.0.5',
     author='J.Guillaume D-Isabelle',
     description='A Python module jgcmlib',
     url='https://github.com/jgwill/jgcmlib',
