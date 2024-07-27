@@ -24,6 +24,11 @@ module = Module()
 result = module.some_method()
 ```
 
+```sh
+jgabcli myabcfile.abc
+```
+
+
 For more detailed usage instructions and examples, please refer to the [documentation](https://github.com/your-username/jgcmlib/blob/main/README.md).
 
 ## Contributing
