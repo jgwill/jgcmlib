@@ -64,7 +64,7 @@ def postprocess_abc(text, conversation_id="test",musescore_bin = "musescore3",us
 def _convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin = "musescore3"):
     subprocess.run([musescore_bin,"-o", res_audio_filepath, res_midi_filepath])
 
-def _convert_midi_2_score(res_midi_filepath, res_musicsheet_svg_filepath, capture_output_of_command,musescore_bin = "musescore3"):
+def _convert_midi_2_score(res_midi_filepath, res_musicsheet_svg_filepath, capture_output_of_command=False,musescore_bin = "musescore3"):
     subprocess.run([musescore_bin, "-o", res_musicsheet_svg_filepath, res_midi_filepath], capture_output=capture_output_of_command, text=True)
 
 def _convert_abc_2_midi(res_abc_filepath, res_midi_filepath,abc2midiExecutable = "abc2midi"):
