@@ -128,3 +128,13 @@ def get_json_files_list(workdir):
         if file.endswith('.json'):
             json_files.append(file)
     return json_files
+
+
+def save_as_json(output,workdir,scprefix,sc_namespace_suffix,suffix=""):
+  outdir=f"{workdir}"
+  os.makedirs(outdir, exist_ok=True)
+  filepath=f"{workdir}/{scprefix}{sc_namespace_suffix}{suffix}.json"
+  with open(filepath, 'w') as f:
+    json.dump(output, f, indent=4)
+    return f"{workdir}/{scprefix}{sc_namespace_suffix}.json"
+  return None
