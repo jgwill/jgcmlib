@@ -24,12 +24,10 @@ pypi-release:
 
 .PHONY: release
 release:
-	version=$(shell python bump_version.py)
-    # Display the new version
-    echo "New version: $(version)"
-    make dist
-	git tag -s $(version) -m "Release version $(version)"
-	git push origin $(version)
+	version2 := $(shell python bump_version.py)
+	make dist
+	git tag -s $(version2) -m "Release version $(version2)"
+	git push origin $(version2)
 	make pypi-release
 
 .PHONY: tstv
