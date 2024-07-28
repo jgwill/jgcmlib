@@ -1,2 +1,4 @@
 tlid
 requests
+music21
+ipython

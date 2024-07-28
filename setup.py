@@ -9,7 +9,9 @@ setup(
     packages=find_packages(),
     install_requires=[
         "tlid",
-        "requests"
+        "requests",
+        "music21",
+        "ipython",
     ],
     entry_points={
         'console_scripts': [
