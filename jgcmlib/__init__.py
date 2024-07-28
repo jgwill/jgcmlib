@@ -155,6 +155,14 @@ def save_as_json(output,workdir,scprefix,sc_namespace_suffix,suffix=""):
   return None
 
 
+def save_as_json_to_filename(output,filepath):
+  _filepath=f"{filepath}.json"
+  with open(_filepath.replace(".json.json",".json"), 'w') as f:
+    json.dump(output, f, indent=4)
+    print("written: ",_filepath)
+    return _filepath
+  return None
+
 
 
 import requests
