@@ -28,6 +28,10 @@ result = module.some_method()
 jgabcli myabcfile.abc
 ```
 
+```sh
+jgabcli myinferenceresponse.json
+```
+
 
 For more detailed usage instructions and examples, please refer to the [documentation](https://github.com/your-username/jgcmlib/blob/main/README.md).
 
