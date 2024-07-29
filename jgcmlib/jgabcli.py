@@ -57,8 +57,8 @@ def main():
             txt_file.write(generated_text)
           
           abc_extracted=jcm.extract_abc_from_text(generated_text)
-          #if abc_extracted is an empty array, exit program
-          if not abc_extracted:
+          #if abc_extracted list is empty  exit program
+          if len(abc_extracted) == 0 or not abc_extracted:
             print("Error: Could not extract the abc notation from the json file.")
             print(data)
             exit(1)
