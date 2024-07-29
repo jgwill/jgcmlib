@@ -36,18 +36,23 @@ def main():
   #Check if we were given an .abc or a .json
   if not args.inputfile.endswith(".abc"):
     if args.inputfile.endswith(".json"):
-      with open(args.inputfile, 'r') as f:
-        data = json.load(f)
-        if isinstance(data, list):
-          generated_text = data[0]['generated_text']
-        else:
-          generated_text = data['generated_text']
-        print("generated_text: ", generated_text)
-        abc_extracted=jcm.extract_abc_from_text(generated_text)
-        print("abc extracted:",abc_extracted)
-        abc_filename=args.inputfile.replace(".json",".abc")
-        with open(abc_filename, "w") as abc_file:
-          abc_file.write(abc_extracted[0])
+      try:
+          
+        with open(args.inputfile, 'r') as f:
+          data = json.load(f)
+          if isinstance(data, list):
+            generated_text = data[0]['generated_text']
+          else:
+            generated_text = data['generated_text']
+          print("generated_text: ", generated_text)
+          abc_extracted=jcm.extract_abc_from_text(generated_text)
+          print("abc extracted:",abc_extracted)
+          abc_filename=args.inputfile.replace(".json",".abc")
+          with open(abc_filename, "w") as abc_file:
+            abc_file.write(abc_extracted[0])
+      except:
+        print("Error: Could not read the json file.")
+        return
           
            
     #print("Only .abc files are supported for now.")
