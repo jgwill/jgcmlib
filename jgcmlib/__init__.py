@@ -5,6 +5,11 @@ import subprocess
 import re
 import tlid
 
+import sys
+
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
+
 def json_to_dict(json_str):
     return json.loads(json_str)
 
@@ -66,21 +71,13 @@ def extract_abc_from_text(text):
     return extracted_abc_notation_from_text
 
 def _convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin = "musescore3", capture_output_of_command=False):
-  with subprocess.DEVNULL as devnull:
-    __convert_midi_to_mp3(res_midi_filepath, res_audio_filepath, musescore_bin, capture_output_of_command)
-
-def __convert_midi_to_mp3(res_midi_filepath, res_audio_filepath, musescore_bin, capture_output_of_command):
-    subprocess.run([musescore_bin,"-o", res_audio_filepath, res_midi_filepath],capture_output=capture_output_of_command, text=True)
+  subprocess.run([musescore_bin,"-o", res_audio_filepath, res_midi_filepath],capture_output=capture_output_of_command, text=True)
 
 def _convert_midi_2_score(res_midi_filepath, res_musicsheet_svg_filepath, capture_output_of_command=False,musescore_bin = "musescore3"):
-  with subprocess.DEVNULL as devnull:
-    __convert_midi_to_score(res_midi_filepath, res_musicsheet_svg_filepath, capture_output_of_command, musescore_bin)
-
-def __convert_midi_to_score(res_midi_filepath, res_musicsheet_svg_filepath, capture_output_of_command, musescore_bin):
-    subprocess.run([musescore_bin, "-o", res_musicsheet_svg_filepath, res_midi_filepath], capture_output=capture_output_of_command, text=True)
+  subprocess.run([musescore_bin, "-o", res_musicsheet_svg_filepath, res_midi_filepath], capture_output=capture_output_of_command, text=True)
 
 def _convert_abc_2_midi(res_abc_filepath, res_midi_filepath,abc2midiExecutable = "abc2midi"):
-    subprocess.run([abc2midiExecutable, str(res_abc_filepath), "-o", res_midi_filepath])
+  subprocess.run([abc2midiExecutable, str(res_abc_filepath), "-o", res_midi_filepath])
 
 def newsc_namespace_suffix(prefix, use_tlider=True):
   ts_or_tlid = _newts_suffix(use_tlider)
