@@ -19,8 +19,7 @@ def postprocess_abc(text, conversation_id="test",musescore_bin = "musescore3",us
       workdir="."
     if conversation_id != "": 
       os.makedirs(f"{workdir}/{conversation_id}", exist_ok=True)
-    abc_pattern_extractor_str = r'(X:\d+\n(?:[^\n]*\n)+)'
-    extracted_abc_notation_from_text = re.findall(abc_pattern_extractor_str, text+'\n')
+    extracted_abc_notation_from_text = extract_abc_from_text(text)
     if not quiet:
       print(f'extract abc block: {extracted_abc_notation_from_text}')
     if extracted_abc_notation_from_text:
@@ -60,6 +59,11 @@ def postprocess_abc(text, conversation_id="test",musescore_bin = "musescore3",us
         return res_musicsheet_svg_filepath_fixed, res_audio_filepath,res_abc_filepath,res_midi_filepath
     else:
         return None, None 
+
+def extract_abc_from_text(text):
+    abc_pattern_extractor_str = r'(X:\d+\n(?:[^\n]*\n)+)'
+    extracted_abc_notation_from_text = re.findall(abc_pattern_extractor_str, text+'\n')
+    return extracted_abc_notation_from_text
 
 def _convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin = "musescore3"):
     subprocess.run([musescore_bin,"-o", res_audio_filepath, res_midi_filepath])

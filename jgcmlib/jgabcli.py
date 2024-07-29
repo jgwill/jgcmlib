@@ -1,6 +1,10 @@
-import jgcmlib as jcm
+import __init__ as jcm
 
+import sys
 import os
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
+import json
 import subprocess
 
 def pto_post_just_an_abc_file(filepath,musescore_bin = "musescore3",abc2midiExecutable = "abc2midi"):
@@ -23,11 +27,33 @@ def pto_post_just_an_abc_file(filepath,musescore_bin = "musescore3",abc2midiExec
 def main():
   import argparse
   parser = argparse.ArgumentParser(description='Convert an ABC file to a MIDI file, a MP3 file and a SVG file')
-  parser.add_argument('abcfile', type=str, help='The ABC file to convert')
+  parser.add_argument('inputfile', type=str, help='The ABC or JSON file to convert')
   parser.add_argument('--musescore-bin', type=str, default="musescore3", help='The path to the musescore binary')
   parser.add_argument('--abc2midi-bin', type=str, default="abc2midi", help='The path to the abc2midi binary')
   args = parser.parse_args()
-  res_musicsheet_svg_filepath, res_audio_filepath, res_midi_filepath =  pto_post_just_an_abc_file(args.abcfile,musescore_bin=args.musescore_bin,abc2midiExecutable=args.abc2midi_bin)
+  
+  abc_filename = args.inputfile
+  #Check if we were given an .abc or a .json
+  if not args.inputfile.endswith(".abc"):
+    if args.inputfile.endswith(".json"):
+      with open(args.inputfile, 'r') as f:
+        data = json.load(f)
+        if isinstance(data, list):
+          generated_text = data[0]['generated_text']
+        else:
+          generated_text = data['generated_text']
+        print("generated_text: ", generated_text)
+        abc_extracted=jcm.extract_abc_from_text(generated_text)
+        print("abc extracted:",abc_extracted)
+        abc_filename=args.inputfile.replace(".json",".abc")
+        with open(abc_filename, "w") as abc_file:
+          abc_file.write(abc_extracted[0])
+          
+           
+    #print("Only .abc files are supported for now.")
+    #return
+  
+  res_musicsheet_svg_filepath, res_audio_filepath, res_midi_filepath =  pto_post_just_an_abc_file(abc_filename,musescore_bin=args.musescore_bin,abc2midiExecutable=args.abc2midi_bin)
   print("res_musicsheet_svg_filepath: ", res_musicsheet_svg_filepath)
   print("res_audio_filepath: ", res_audio_filepath)
   print("res_midi_filepath: ", res_midi_filepath)
