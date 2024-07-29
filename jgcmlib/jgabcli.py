@@ -52,6 +52,10 @@ def main():
           else:
             generated_text = data['generated_text']
           print("generated_text: ", generated_text)
+          txt_filename=args.inputfile.replace(".json",".txt")
+          with open(txt_filename, "w") as txt_file:
+            txt_file.write(generated_text)
+          
           abc_extracted=jcm.extract_abc_from_text(generated_text)
           #if abc_extracted is an empty array, exit program
           if not abc_extracted:
