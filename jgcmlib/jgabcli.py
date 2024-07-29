@@ -54,6 +54,7 @@ def main():
           #if abc_extracted is an empty array, exit program
           if not abc_extracted:
             print("Error: Could not extract the abc notation from the json file.")
+            print(data)
             return
           print("abc extracted:",abc_extracted)
           abc_filename=args.inputfile.replace(".json",".abc")
