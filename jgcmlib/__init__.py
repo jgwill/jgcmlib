@@ -65,8 +65,8 @@ def extract_abc_from_text(text):
     extracted_abc_notation_from_text = re.findall(abc_pattern_extractor_str, text+'\n')
     return extracted_abc_notation_from_text
 
-def _convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin = "musescore3"):
-    subprocess.run([musescore_bin,"-o", res_audio_filepath, res_midi_filepath])
+def _convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin = "musescore3", capture_output_of_command=False):
+    subprocess.run([musescore_bin,"-o", res_audio_filepath, res_midi_filepath],capture_output=capture_output_of_command, text=True)
 
 def _convert_midi_2_score(res_midi_filepath, res_musicsheet_svg_filepath, capture_output_of_command=False,musescore_bin = "musescore3"):
     subprocess.run([musescore_bin, "-o", res_musicsheet_svg_filepath, res_midi_filepath], capture_output=capture_output_of_command, text=True)
