@@ -51,6 +51,10 @@ def main():
             generated_text = data['generated_text']
           print("generated_text: ", generated_text)
           abc_extracted=jcm.extract_abc_from_text(generated_text)
+          #if abc_extracted is an empty array, exit program
+          if not abc_extracted:
+            print("Error: Could not extract the abc notation from the json file.")
+            return
           print("abc extracted:",abc_extracted)
           abc_filename=args.inputfile.replace(".json",".abc")
           try:
