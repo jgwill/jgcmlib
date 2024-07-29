@@ -61,7 +61,7 @@ def main():
           if not abc_extracted:
             print("Error: Could not extract the abc notation from the json file.")
             print(data)
-            return
+            exit(1)
           print("abc extracted:",abc_extracted)
           abc_filename=args.inputfile.replace(".json",".abc")
           try:
@@ -69,7 +69,7 @@ def main():
               abc_file.write(abc_extracted[0])
           except:
             print("Error: Could not write the abc file.  There might just did not have any abc notation in the json.")
-            return
+            exit(1)
       except:
         print("Error: Could not read the json file.")
         return
