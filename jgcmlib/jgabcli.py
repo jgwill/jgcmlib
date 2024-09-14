@@ -11,7 +11,7 @@ except:
 import json
 import subprocess
 
-def pto__convert_midi_2_score(filepath, musescore_bin = "musescore3"):
+def pto__convert_midi_2_score(filepath, musescore_bin = "musescore3",ext="svg"):
   filebase = os.path.basename(filepath)
   output_dir=os.path.dirname(filepath)
   res_musicsheet_svg_filepath=os.path.join(output_dir, filebase.replace(".mid",".svg"))
@@ -21,13 +21,13 @@ def pto__convert_midi_2_score(filepath, musescore_bin = "musescore3"):
   # Convert midi to musicsheet
   
   try:
-    jcm._convert_midi_2_score(filepath, res_musicsheet_svg_filepath,musescore_bin=musescore_bin)
+    jcm._convert_midi_2_score(filepath, res_musicsheet_svg_filepath,musescore_bin=musescore_bin,ext=ext)
   except subprocess.CalledProcessError as e:
     print("Error: Could not convert the midi file to musicsheet. ", e)
     return
   return res_musicsheet_svg_filepath
  
-def pto_post_just_an_abc_file(filepath,musescore_bin = "musescore3",abc2midiExecutable = "abc2midi"):
+def pto_post_just_an_abc_file(filepath,musescore_bin = "musescore3",abc2midiExecutable = "abc2midi",score_ext="svg"):
   
   filebase = os.path.basename(filepath)
   output_dir=os.path.dirname(filepath)
@@ -47,7 +47,7 @@ def pto_post_just_an_abc_file(filepath,musescore_bin = "musescore3",abc2midiExec
       sleep(2)
       return
       #raise Exception("Error: Could not convert the midi file to mp3. Something with musescore is not right.")
-  jcm._convert_midi_2_score(filepath, res_musicsheet_svg_filepath,musescore_bin=musescore_bin)
+  jcm._convert_midi_2_score(filepath, res_musicsheet_svg_filepath,musescore_bin=musescore_bin,ext=score_ext)
   return res_musicsheet_svg_filepath, res_audio_filepath, res_midi_filepath
 
 
@@ -108,6 +108,9 @@ def create_arg_parser(argparse):
     parser.add_argument('inputfile', type=str, help='The ABC or JSON or MID file to convert')
     parser.add_argument('--musescore-bin', type=str, default="musescore3", help='The path to the musescore binary (default: musescore3)')
     parser.add_argument('--abc2midi-bin', type=str, default="abc2midi", help='The path to the abc2midi binary. (default: abc2midi)')
+    #score extension convertion, default is svg, support for png,jpg using ImageMagick
+    parser.add_argument('-X','--ext', type=str, default="svg", help='The extension of the score file to convert to. (default: svg)')
+    
     args = parser.parse_args()
     return args
 
