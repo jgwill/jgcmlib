@@ -63,27 +63,8 @@ def main():
   #Check if we were given an .abc or a .json
   if not args.inputfile.endswith(".abc"):
     if args.inputfile.endswith(".json"):
-      try:
-          
-  res_musicsheet_svg_filepath, res_audio_filepath, res_midi_filepath =  pto_post_just_an_abc_file(abc_filename,musescore_bin=args.musescore_bin,abc2midiExecutable=args.abc2midi_bin, score_ext=args.ext)
-          txt_filename=args.inputfile.replace(".json",".txt")
-          with open(txt_filename, "w") as txt_file:
-            txt_file.write(generated_text)
-          
-          abc_extracted=jcm.extract_abc_from_text(generated_text)
-          #if abc_extracted list is empty  exit program
-          if len(abc_extracted) == 0 or not abc_extracted:
-            print("Error: Could not extract the abc notation from the json file.")
-            print(data)
-            exit(1)
-          print("abc extracted:",abc_extracted)
-          abc_filename=args.inputfile.replace(".json",".abc")
-          try:
-            with open(abc_filename, "w") as abc_file:
-              abc_file.write(abc_extracted[0])
-          except:
-            print("Error: Could not write the abc file.  There might just did not have any abc notation in the json.")
-            exit(1)
+      try:          
+        abc_filename = extract_abc_from_json_to_abc_file(args.inputfile)
       except:
         print("Error: Could not read the json file.")
         return
@@ -96,6 +77,34 @@ def main():
   print("res_musicsheet_svg_filepath: ", res_musicsheet_svg_filepath)
   print("res_audio_filepath: ", res_audio_filepath)
   print("res_midi_filepath: ", res_midi_filepath)
+
+def extract_abc_from_json_to_abc_file(inputfile):
+    with open(inputfile, 'r') as f:
+      data = json.load(f)
+      if isinstance(data, list):
+        generated_text = data[0]['generated_text']
+      else:
+        generated_text = data['generated_text']
+      print("generated_text: ", generated_text)
+      txt_filename=inputfile.replace(".json",".txt")
+      with open(txt_filename, "w") as txt_file:
+        txt_file.write(generated_text)
+          
+      abc_extracted=jcm.extract_abc_from_text(generated_text)
+          #if abc_extracted list is empty  exit program
+      if len(abc_extracted) == 0 or not abc_extracted:
+        print("Error: Could not extract the abc notation from the json file.")
+        print(data)
+        raise Exception("Error: Could not extract the abc notation from the json file.")
+      print("abc extracted:",abc_extracted)
+      abc_filename=inputfile.replace(".json",".abc")
+      try:
+        with open(abc_filename, "w") as abc_file:
+          abc_file.write(abc_extracted[0])
+      except:
+        print("Error: Could not write the abc file.  There might just did not have any abc notation in the json.")
+        raise Exception("Error: Could not write the abc file.  There might just did not have any abc notation in the json.")
+    return abc_filename
 
 def create_arg_parser(argparse):
     parser = argparse.ArgumentParser(description='Convert an ABC file to a MIDI file, a MP3 file and a SVG file.  Or convert a MIDI file to a SVG file.')
