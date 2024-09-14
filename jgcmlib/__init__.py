@@ -73,19 +73,27 @@ def extract_abc_from_text(text):
 def _convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin = "musescore3", capture_output_of_command=False):
   subprocess.run([musescore_bin,"-o", res_audio_filepath, res_midi_filepath],capture_output=capture_output_of_command, text=True)
 
-def _convert_midi_2_score(res_midi_filepath, res_musicsheet_svg_filepath, capture_output_of_command=False,musescore_bin = "musescore3",ext="svg"):
-  subprocess.run([musescore_bin, "-o", res_musicsheet_svg_filepath, res_midi_filepath], capture_output=capture_output_of_command, text=True,check=True)
-  if ext is not "svg":
-    #convert it using /usr/bin/convert imagemagick
-    try:
-      converted_file = res_musicsheet_svg_filepath.replace('.svg',f'.{ext}')
-      print(f"converting {res_musicsheet_svg_filepath} to {converted_file}")
-      subprocess.run(["/usr/bin/convert", res_musicsheet_svg_filepath, res_musicsheet_svg_filepath.replace(".svg",f".{ext}")], capture_output=capture_output_of_command, text=True,check=True)
-      return converted_file
-    except:
-      print("Error: Could not convert the svg file to ",ext)
-      return None
-  return res_musicsheet_svg_filepath
+def _convert_midi_2_score(res_midi_filepath, res_musicsheet_svg_filepath, capture_output_of_command=False,musescore_bin = "musescore3",ext="svg",convert_bin="convert"):
+  try:
+    subprocess.run([musescore_bin, "-o", res_musicsheet_svg_filepath, res_midi_filepath], capture_output=capture_output_of_command, text=True,check=True)
+    if ext != "svg":
+      #convert it using /usr/bin/convert imagemagick
+      try:
+        converted_file = _convert_svg_2_ext(res_musicsheet_svg_filepath, capture_output_of_command, ext, convert_bin)
+        return converted_file
+      except:
+        print("Error: Could not convert the svg file to ",ext)
+        return None
+    return res_musicsheet_svg_filepath
+  except:
+    print("Error: Could not convert the midi file to a score file.")
+    return None
+
+def _convert_svg_2_ext(res_musicsheet_svg_filepath, capture_output_of_command, ext, convert_bin):
+    converted_file = res_musicsheet_svg_filepath.replace('.svg',f'.{ext}')
+    print(f"converting {res_musicsheet_svg_filepath} to {converted_file}")
+    subprocess.run([convert_bin, res_musicsheet_svg_filepath, res_musicsheet_svg_filepath.replace(".svg",f".{ext}")], capture_output=capture_output_of_command, text=True,check=True)
+    return converted_file
 
 def _convert_abc_2_midi(res_abc_filepath, res_midi_filepath,abc2midiExecutable = "abc2midi"):
   subprocess.run([abc2midiExecutable, str(res_abc_filepath), "-o", res_midi_filepath],check=True)
