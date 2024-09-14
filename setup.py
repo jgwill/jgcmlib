@@ -15,7 +15,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            "jgabcli = jgcmlib.jgabcli:main"
+            "jgabcli = jgcmlib.jgabcli:main",
             "jgmid2score = jgcmlib.jgabcli:main_mid2score"
         ]
     },
