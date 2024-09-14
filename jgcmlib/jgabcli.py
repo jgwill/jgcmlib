@@ -104,8 +104,8 @@ def main():
   print("res_midi_filepath: ", res_midi_filepath)
 
 def create_arg_parser(argparse):
-    parser = argparse.ArgumentParser(description='Convert an ABC file to a MIDI file, a MP3 file and a SVG file')
-    parser.add_argument('inputfile', type=str, help='The ABC or JSON file to convert')
+    parser = argparse.ArgumentParser(description='Convert an ABC file to a MIDI file, a MP3 file and a SVG file.  Or convert a MIDI file to a SVG file.')
+    parser.add_argument('inputfile', type=str, help='The ABC or JSON or MID file to convert')
     parser.add_argument('--musescore-bin', type=str, default="musescore3", help='The path to the musescore binary (default: musescore3)')
     parser.add_argument('--abc2midi-bin', type=str, default="abc2midi", help='The path to the abc2midi binary. (default: abc2midi)')
     args = parser.parse_args()
