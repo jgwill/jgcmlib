@@ -65,13 +65,7 @@ def main():
     if args.inputfile.endswith(".json"):
       try:
           
-        with open(args.inputfile, 'r') as f:
-          data = json.load(f)
-          if isinstance(data, list):
-            generated_text = data[0]['generated_text']
-          else:
-            generated_text = data['generated_text']
-          print("generated_text: ", generated_text)
+  res_musicsheet_svg_filepath, res_audio_filepath, res_midi_filepath =  pto_post_just_an_abc_file(abc_filename,musescore_bin=args.musescore_bin,abc2midiExecutable=args.abc2midi_bin, score_ext=args.ext)
           txt_filename=args.inputfile.replace(".json",".txt")
           with open(txt_filename, "w") as txt_file:
             txt_file.write(generated_text)
@@ -98,7 +92,7 @@ def main():
     #print("Only .abc files are supported for now.")
     #return
   
-  res_musicsheet_svg_filepath, res_audio_filepath, res_midi_filepath =  pto_post_just_an_abc_file(abc_filename,musescore_bin=args.musescore_bin,abc2midiExecutable=args.abc2midi_bin)
+  res_musicsheet_svg_filepath, res_audio_filepath, res_midi_filepath =  pto_post_just_an_abc_file(abc_filename,musescore_bin=args.musescore_bin,abc2midiExecutable=args.abc2midi_bin, score_ext=args.ext)
   print("res_musicsheet_svg_filepath: ", res_musicsheet_svg_filepath)
   print("res_audio_filepath: ", res_audio_filepath)
   print("res_midi_filepath: ", res_midi_filepath)

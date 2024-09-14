@@ -14,7 +14,7 @@ def json_to_dict(json_str):
     return json.loads(json_str)
 
 # IMPORT from CM app.py, by J.Guillaume Isabelle, 2024-06-20
-def postprocess_abc(text, conversation_id="test",musescore_bin = "musescore3",use_tlider=True,workdir="tmp",prefix="",quiet=False,sc_namespace_suffix=None):
+def postprocess_abc(text, conversation_id="test",musescore_bin = "musescore3",use_tlider=True,workdir="tmp",prefix="",quiet=False,sc_namespace_suffix=None,score_ext="svg"):
     abc2midiExecutable = "abc2midi"
     #check if musescore_bin is an executable, else use "musescore"
     #if not os.path.isfile(musescore_bin):
@@ -47,7 +47,7 @@ def postprocess_abc(text, conversation_id="test",musescore_bin = "musescore3",us
         
         capture_output_of_command = True if not quiet else False
         
-        _convert_midi_2_score(res_midi_filepath, res_musicsheet_svg_filepath, capture_output_of_command,musescore_bin=musescore_bin)
+        _convert_midi_2_score(res_midi_filepath, res_musicsheet_svg_filepath, capture_output_of_command,musescore_bin=musescore_bin,ext=score_ext)
         _convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin=musescore_bin)
         
         # Fix the SVG file path (from ChatMusician, why do they do that ?)
