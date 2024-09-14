@@ -1,6 +1,8 @@
 
 import sys
 import os
+import argparse
+from time import sleep
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 try:
   import jgcmlib as jcm
@@ -9,6 +11,22 @@ except:
 import json
 import subprocess
 
+def pto__convert_midi_2_score(filepath, musescore_bin = "musescore3"):
+  filebase = os.path.basename(filepath)
+  output_dir=os.path.dirname(filepath)
+  res_musicsheet_svg_filepath=os.path.join(output_dir, filebase.replace(".mid",".svg"))
+  res_musicsheet_svg_filepath=res_musicsheet_svg_filepath+".svg"
+  res_musicsheet_svg_filepath=res_musicsheet_svg_filepath.replace(".svg.svg",".svg")
+  
+  # Convert midi to musicsheet
+  
+  try:
+    jcm._convert_midi_2_score(filepath, res_musicsheet_svg_filepath,musescore_bin=musescore_bin)
+  except subprocess.CalledProcessError as e:
+    print("Error: Could not convert the midi file to musicsheet. ", e)
+    return
+  return res_musicsheet_svg_filepath
+ 
 def pto_post_just_an_abc_file(filepath,musescore_bin = "musescore3",abc2midiExecutable = "abc2midi"):
   
   filebase = os.path.basename(filepath)
@@ -26,18 +44,20 @@ def pto_post_just_an_abc_file(filepath,musescore_bin = "musescore3",abc2midiExec
       jcm._convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin=musescore_bin)
     except:
       print("Error: Could not convert the midi file to mp3. Something with musescore is not right.")
+      sleep(2)
       return
       #raise Exception("Error: Could not convert the midi file to mp3. Something with musescore is not right.")
   jcm._convert_midi_2_score(filepath, res_musicsheet_svg_filepath,musescore_bin=musescore_bin)
   return res_musicsheet_svg_filepath, res_audio_filepath, res_midi_filepath
 
+
+def main_mid2score():
+  args = create_arg_parser(argparse)
+  res_musicsheet_svg_filepath = pto__convert_midi_2_score(args.inputfile,musescore_bin=args.musescore_bin)
+  print("res_musicsheet_svg_filepath: ", res_musicsheet_svg_filepath)
+
 def main():
-  import argparse
-  parser = argparse.ArgumentParser(description='Convert an ABC file to a MIDI file, a MP3 file and a SVG file')
-  parser.add_argument('inputfile', type=str, help='The ABC or JSON file to convert')
-  parser.add_argument('--musescore-bin', type=str, default="musescore3", help='The path to the musescore binary (default: musescore3)')
-  parser.add_argument('--abc2midi-bin', type=str, default="abc2midi", help='The path to the abc2midi binary. (default: abc2midi)')
-  args = parser.parse_args()
+  args = create_arg_parser(argparse)
   
   abc_filename = args.inputfile
   #Check if we were given an .abc or a .json
@@ -82,6 +102,14 @@ def main():
   print("res_musicsheet_svg_filepath: ", res_musicsheet_svg_filepath)
   print("res_audio_filepath: ", res_audio_filepath)
   print("res_midi_filepath: ", res_midi_filepath)
+
+def create_arg_parser(argparse):
+    parser = argparse.ArgumentParser(description='Convert an ABC file to a MIDI file, a MP3 file and a SVG file')
+    parser.add_argument('inputfile', type=str, help='The ABC or JSON file to convert')
+    parser.add_argument('--musescore-bin', type=str, default="musescore3", help='The path to the musescore binary (default: musescore3)')
+    parser.add_argument('--abc2midi-bin', type=str, default="abc2midi", help='The path to the abc2midi binary. (default: abc2midi)')
+    args = parser.parse_args()
+    return args
 
 if __name__ == "__main__":
   main()
