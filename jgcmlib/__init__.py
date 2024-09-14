@@ -63,7 +63,7 @@ def postprocess_abc(text, conversation_id="test",musescore_bin = "musescore3",us
         #print_postprocess_abc_result_as_markdown(res_musicsheet_svg_filepath_fixed, res_audio_filepath,res_abc_filepath,render=False)
         return res_musicsheet_svg_filepath_fixed, res_audio_filepath,res_abc_filepath,res_midi_filepath
     else:
-        return None, None 
+        return None, None, None, None
 
 def extract_abc_from_text(text):
     abc_pattern_extractor_str = r'(X:\d+\n(?:[^\n]*\n)+)'
