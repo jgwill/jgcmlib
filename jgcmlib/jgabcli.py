@@ -112,7 +112,7 @@ def create_arg_parser(argparse):
     parser.add_argument('--musescore-bin', type=str, default="musescore3", help='The path to the musescore binary (default: musescore3)')
     parser.add_argument('--abc2midi-bin', type=str, default="abc2midi", help='The path to the abc2midi binary. (default: abc2midi)')
     #score extension convertion, default is svg, support for png,jpg using ImageMagick
-    parser.add_argument('-X','--ext', type=str, default="svg", help='The extension of the score file to convert to. (default: svg)')
+    parser.add_argument('-X','--ext', type=str, default="jpg", help='The extension of the score file to convert to. (default: jpg)')
     
     args = parser.parse_args()
     return args
