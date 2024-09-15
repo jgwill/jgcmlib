@@ -5,9 +5,11 @@ import argparse
 from time import sleep
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 try:
-  import jgcmlib as jcm
-except:
-  import __init__ as jcm
+  from jgcmhelper import _convert_midi_2_score, _convert_abc_2_midi, _convert_midi_to_mp3,extract_abc_from_text
+  #import jgcmlib as jcm
+except ImportError:
+  from .jgcmhelper import _convert_midi_2_score, _convert_abc_2_midi, _convert_midi_to_mp3,extract_abc_from_text
+  #import __init__ as jcm
 import json
 import subprocess
 
@@ -21,7 +23,7 @@ def pto__convert_midi_2_score(filepath, musescore_bin = "musescore3",ext="svg"):
   # Convert midi to musicsheet
     
   try:
-    res_musicsheet_svg_filepath=jcm._convert_midi_2_score(filepath, res_musicsheet_svg_filepath,musescore_bin=musescore_bin,ext=ext)
+    res_musicsheet_svg_filepath=_convert_midi_2_score(filepath, res_musicsheet_svg_filepath,musescore_bin=musescore_bin,ext=ext)
   except subprocess.CalledProcessError as e:
     print("Error: Could not convert the midi file to musicsheet. ", e)
     return
@@ -33,15 +35,15 @@ def pto_post_just_an_abc_file(filepath,musescore_bin = "musescore3",abc2midiExec
   output_dir=os.path.dirname(filepath)
   res_midi_filepath=os.path.join(output_dir, filebase.replace(".abc",".mid"))
   res_audio_filepath=os.path.join(output_dir, filebase.replace(".abc",".mp3"))
-  res_musicsheet_svg_filepath=os.path.join(output_dir, filebase.replace(".abc",".svg"))
+  #res_musicsheet_svg_filepath=os.path.join(output_dir, filebase.replace(".abc",".svg"))
   
-  res_midi_filepath=jcm._convert_abc_2_midi(filepath, res_midi_filepath,abc2midiExecutable=abc2midiExecutable)
+  res_midi_filepath=_convert_abc_2_midi(filepath, res_midi_filepath,abc2midiExecutable=abc2midiExecutable)
   try:
-    res_audio_filepath=jcm._convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin=musescore_bin)
+    res_audio_filepath=_convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin=musescore_bin)
   except:
     musescore_bin="musescore"
     try:
-     res_audio_filepath= jcm._convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin=musescore_bin)
+     res_audio_filepath= _convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin=musescore_bin)
     except:
       print("Error: Could not convert the midi file to mp3. Something with musescore is not right.")
       sleep(2)
@@ -95,7 +97,7 @@ def extract_abc_from_json_to_abc_file(inputfile):
       with open(txt_filename, "w") as txt_file:
         txt_file.write(generated_text)
           
-      abc_extracted=jcm.extract_abc_from_text(generated_text)
+      abc_extracted=extract_abc_from_text(generated_text)
           #if abc_extracted list is empty  exit program
       if len(abc_extracted) == 0 or not abc_extracted:
         print("Error: Could not extract the abc notation from the json file.")
