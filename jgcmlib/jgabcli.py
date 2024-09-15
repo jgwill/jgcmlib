@@ -47,7 +47,11 @@ def pto_post_just_an_abc_file(filepath,musescore_bin = "musescore3",abc2midiExec
       sleep(2)
       return
       #raise Exception("Error: Could not convert the midi file to mp3. Something with musescore is not right.")
-  score_path=jcm._convert_midi_2_score(filepath, res_musicsheet_svg_filepath,musescore_bin=musescore_bin,ext=score_ext)
+  expected_mid_filepath=filepath.replace(".abc",".mid")
+  if not os.path.exists(expected_mid_filepath):
+    print("Error: convert of the abc file to midi has not worked.")
+    return
+  score_path=jcm._convert_midi_2_score(expected_mid_filepath, res_musicsheet_svg_filepath,musescore_bin=musescore_bin,ext=score_ext)
   return score_path, res_audio_filepath, res_midi_filepath
 
 
