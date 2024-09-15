@@ -81,7 +81,9 @@ def _convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin = "
 
 def _convert_midi_2_score(res_midi_filepath, res_musicsheet_svg_filepath, capture_output_of_command=False,musescore_bin = "musescore3",ext="svg",convert_bin="convert"):
   try:
-    subprocess.run([musescore_bin, "-o", res_musicsheet_svg_filepath, res_midi_filepath], capture_output=capture_output_of_command, text=True,check=True)
+    res_musicsheet_svg_filepath_fixed=res_musicsheet_svg_filepath.replace('.svg','-1.svg')
+    res_musicsheet_svg_filepath_fixed=.replace('-1-1.svg','-1.svg')
+    subprocess.run([musescore_bin, "-o", res_musicsheet_svg_filepath_fixed, res_midi_filepath], capture_output=capture_output_of_command, text=True,check=True)
     res_musicsheet_svg_filepath_fixed=res_musicsheet_svg_filepath.replace('.svg','-1.svg')
     if ext != "svg":
       #convert it using /usr/bin/convert imagemagick
