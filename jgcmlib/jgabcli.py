@@ -53,7 +53,7 @@ def pto_post_just_an_abc_file(filepath,musescore_bin = "musescore3",abc2midiExec
 
 def main_mid2score():
   args = create_arg_parser(argparse)
-  res_musicsheet_svg_filepath = pto__convert_midi_2_score(args.inputfile,musescore_bin=args.musescore_bin)
+  res_musicsheet_svg_filepath = pto__convert_midi_2_score(args.inputfile,musescore_bin=args.musescore_bin,ext=args.ext)
   print("res_musicsheet_svg_filepath: ", res_musicsheet_svg_filepath)
 
 def main():
