@@ -92,13 +92,9 @@ def _convert_midi_2_score(res_midi_filepath, res_musicsheet_svg_filepath=None, c
     result=None
     with tempfile.NamedTemporaryFile(delete=False, suffix='.svg') as tmp_score_file:
       expected_tmp_file=tmp_score_file.name.replace(".svg","-1.svg")
-      #res_musicsheet_svg_filepath_fixed=res_musicsheet_svg_filepath.replace('-1.svg','-1.svg')
-      # res_musicsheet_svg_filepath_fixed=res_musicsheet_svg_filepath_fixed.replace('-1-1.svg','-1.svg')
-      # res_musicsheet_svg_filepath_fixed=res_musicsheet_svg_filepath_fixed.replace('-1-1.svg','-1.svg')
       musescore_command = [musescore_bin,res_midi_filepath, "-o", tmp_score_file.name]
       if not quiet:print(musescore_command)
       result=subprocess.run(musescore_command, capture_output=capture_output_of_command, stdout=DEVNULL, stderr=DEVNULL, text=True,check=True)
-      #res_musicsheet_svg_filepath_fixed=res_musicsheet_svg_filepath.replace('.svg','-1.svg')
       # copy the tmp file to the final file using the os from expected_tmp_file to res_musicsheet_svg_filepath
       if not quiet:print(f"copying {expected_tmp_file} to {res_musicsheet_svg_filepath}")
       

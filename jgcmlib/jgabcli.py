@@ -14,20 +14,13 @@ import json
 import subprocess
 
 def pto__convert_midi_2_score(filepath, musescore_bin = "musescore3",ext="svg"):
-  filebase = os.path.basename(filepath)
-  output_dir=os.path.dirname(filepath)
-  res_musicsheet_svg_filepath=os.path.join(output_dir, filebase.replace(".mid",".svg"))
-  res_musicsheet_svg_filepath=res_musicsheet_svg_filepath+".svg"
-  res_musicsheet_svg_filepath=res_musicsheet_svg_filepath.replace(".svg.svg",".svg")
-  
-  # Convert midi to musicsheet
-    
+      
   try:
-    res_musicsheet_svg_filepath=_convert_midi_2_score(filepath, res_musicsheet_svg_filepath,musescore_bin=musescore_bin,ext=ext)
+    res_musicsheet_svg_filepath=_convert_midi_2_score(filepath,musescore_bin=musescore_bin,ext=ext)
+    return res_musicsheet_svg_filepath
   except subprocess.CalledProcessError as e:
     print("Error: Could not convert the midi file to musicsheet. ", e)
-    return
-  return res_musicsheet_svg_filepath
+    return None
  
 def pto_post_just_an_abc_file(filepath,musescore_bin = "musescore3",abc2midiExecutable = "abc2midi",score_ext="svg"):
   
