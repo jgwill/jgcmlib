@@ -1,5 +1,7 @@
 import json
 import os
+import shutil
+import tempfile
 import time
 import subprocess
 from subprocess import DEVNULL
@@ -83,40 +85,55 @@ def _convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin = "
     raise Exception(f"Error: Could not convert the midi file {res_midi_filepath} to mp3 {res_audio_filepath}.")
     
 
-def _convert_midi_2_score(res_midi_filepath, res_musicsheet_svg_filepath, capture_output_of_command=False,musescore_bin = "musescore3",ext="svg",convert_bin="convert"):
+def _convert_midi_2_score(res_midi_filepath, res_musicsheet_svg_filepath=None, capture_output_of_command=False,musescore_bin = "musescore3",ext="svg",convert_bin="convert",quiet=True):
+  if res_musicsheet_svg_filepath is None:
+    res_musicsheet_svg_filepath = res_midi_filepath.replace(".mid",".svg")
   try:
-    res_musicsheet_svg_filepath_fixed=res_musicsheet_svg_filepath.replace('.svg','-1.svg')
-    res_musicsheet_svg_filepath_fixed=res_musicsheet_svg_filepath_fixed.replace('-1-1.svg','-1.svg')
-    result=subprocess.run([musescore_bin, "-o", res_musicsheet_svg_filepath_fixed, res_midi_filepath], capture_output=capture_output_of_command, stdout=DEVNULL, stderr=DEVNULL, text=True,check=True)
-    res_musicsheet_svg_filepath_fixed=res_musicsheet_svg_filepath.replace('.svg','-1.svg')
-    if ext != "svg":
-      #convert it using /usr/bin/convert imagemagick
-      try:
-        converted_file = _convert_svg_2_ext(res_musicsheet_svg_filepath, capture_output_of_command, ext, convert_bin)
-        return converted_file
-      except:
-        print("Error: Could not convert the svg file to ",ext)
-        return None
-    return res_musicsheet_svg_filepath_fixed
-  except:
+    result=None
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.svg') as tmp_score_file:
+      expected_tmp_file=tmp_score_file.name.replace(".svg","-1.svg")
+      #res_musicsheet_svg_filepath_fixed=res_musicsheet_svg_filepath.replace('-1.svg','-1.svg')
+      # res_musicsheet_svg_filepath_fixed=res_musicsheet_svg_filepath_fixed.replace('-1-1.svg','-1.svg')
+      # res_musicsheet_svg_filepath_fixed=res_musicsheet_svg_filepath_fixed.replace('-1-1.svg','-1.svg')
+      musescore_command = [musescore_bin,res_midi_filepath, "-o", tmp_score_file.name]
+      if not quiet:print(musescore_command)
+      result=subprocess.run(musescore_command, capture_output=capture_output_of_command, stdout=DEVNULL, stderr=DEVNULL, text=True,check=True)
+      #res_musicsheet_svg_filepath_fixed=res_musicsheet_svg_filepath.replace('.svg','-1.svg')
+      # copy the tmp file to the final file using the os from expected_tmp_file to res_musicsheet_svg_filepath
+      if not quiet:print(f"copying {expected_tmp_file} to {res_musicsheet_svg_filepath}")
+      
+      shutil.copyfile(expected_tmp_file, res_musicsheet_svg_filepath)
+      if ext != "svg":
+        #convert it using /usr/bin/convert imagemagick
+        try:
+          converted_file = _convert_svg_2_ext(res_musicsheet_svg_filepath, capture_output_of_command, ext, convert_bin)
+          return converted_file
+        except Exception as e:
+          print(e)
+          print("Error: Could not convert the svg file to ",ext)
+          return None
+      return res_musicsheet_svg_filepath
+  except Exception as e:
+    print(e)
     print(result)
     print("Error: Could not convert the midi file to a score file.")
     return None
 
 def _convert_svg_2_ext(res_musicsheet_svg_filepath, capture_output_of_command, ext, convert_bin):
     converted_file = res_musicsheet_svg_filepath.replace('.svg',f'.{ext}')
-    res_musicsheet_svg_filepath_fixed=res_musicsheet_svg_filepath.replace('.svg','-1.svg')
-    if os.path.exists(res_musicsheet_svg_filepath_fixed):
-      print(f"converting {res_musicsheet_svg_filepath_fixed} to {converted_file}")
+    if not os.path.exists(res_musicsheet_svg_filepath):
+      res_musicsheet_svg_filepath=res_musicsheet_svg_filepath.replace('.svg','-1.svg')
+    if os.path.exists(res_musicsheet_svg_filepath):
+      print(f"converting {res_musicsheet_svg_filepath} to {converted_file}")
     else:
       #print("Error: Could not find the svg file to convert." + res_musicsheet_svg_filepath_fixed)
-      raise Exception("Error: Could not find the svg file to convert." + res_musicsheet_svg_filepath_fixed)
+      raise Exception("Error: Could not find the svg file to convert." + res_musicsheet_svg_filepath)
     try:
-      result=subprocess.run([convert_bin, res_musicsheet_svg_filepath_fixed, converted_file], capture_output=capture_output_of_command, stdout=DEVNULL, stderr=DEVNULL, text=True,check=True)
+      result=subprocess.run([convert_bin, res_musicsheet_svg_filepath, converted_file], capture_output=capture_output_of_command, stdout=DEVNULL, stderr=DEVNULL, text=True,check=True)
       return converted_file
     except:
       print(result)
-      raise Exception(f"Error: Could not convert the svg file {res_musicsheet_svg_filepath_fixed} to {ext} file.")
+      raise Exception(f"Error: Could not convert the svg file {res_musicsheet_svg_filepath} to {ext} file.")
 
 def _convert_abc_2_midi(res_abc_filepath, res_midi_filepath,abc2midiExecutable = "abc2midi", capture_output_of_command=False):
   try:
