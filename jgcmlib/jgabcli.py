@@ -19,9 +19,9 @@ def pto__convert_midi_2_score(filepath, musescore_bin = "musescore3",ext="svg"):
   res_musicsheet_svg_filepath=res_musicsheet_svg_filepath.replace(".svg.svg",".svg")
   
   # Convert midi to musicsheet
-  
+    
   try:
-    jcm._convert_midi_2_score(filepath, res_musicsheet_svg_filepath,musescore_bin=musescore_bin,ext=ext)
+    res_musicsheet_svg_filepath=jcm._convert_midi_2_score(filepath, res_musicsheet_svg_filepath,musescore_bin=musescore_bin,ext=ext)
   except subprocess.CalledProcessError as e:
     print("Error: Could not convert the midi file to musicsheet. ", e)
     return

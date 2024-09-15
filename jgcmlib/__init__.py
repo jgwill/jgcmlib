@@ -47,7 +47,7 @@ def postprocess_abc(text, conversation_id="test",musescore_bin = "musescore3",us
         
         capture_output_of_command = True if not quiet else False
         
-        _convert_midi_2_score(res_midi_filepath, res_musicsheet_svg_filepath, capture_output_of_command,musescore_bin=musescore_bin,ext=score_ext)
+        res_musicsheet_svg_filepath_fixed=_convert_midi_2_score(res_midi_filepath, res_musicsheet_svg_filepath, capture_output_of_command,musescore_bin=musescore_bin,ext=score_ext)
         _convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin=musescore_bin)
         
         # Fix the SVG file path (from ChatMusician, why do they do that ?)
@@ -76,6 +76,7 @@ def _convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin = "
 def _convert_midi_2_score(res_midi_filepath, res_musicsheet_svg_filepath, capture_output_of_command=False,musescore_bin = "musescore3",ext="svg",convert_bin="convert"):
   try:
     subprocess.run([musescore_bin, "-o", res_musicsheet_svg_filepath, res_midi_filepath], capture_output=capture_output_of_command, text=True,check=True)
+    res_musicsheet_svg_filepath_fixed=res_musicsheet_svg_filepath.replace('.svg','-1.svg')
     if ext != "svg":
       #convert it using /usr/bin/convert imagemagick
       try:
@@ -84,15 +85,20 @@ def _convert_midi_2_score(res_midi_filepath, res_musicsheet_svg_filepath, captur
       except:
         print("Error: Could not convert the svg file to ",ext)
         return None
-    return res_musicsheet_svg_filepath
+    return res_musicsheet_svg_filepath_fixed
   except:
     print("Error: Could not convert the midi file to a score file.")
     return None
 
 def _convert_svg_2_ext(res_musicsheet_svg_filepath, capture_output_of_command, ext, convert_bin):
     converted_file = res_musicsheet_svg_filepath.replace('.svg',f'.{ext}')
-    print(f"converting {res_musicsheet_svg_filepath} to {converted_file}")
-    subprocess.run([convert_bin, res_musicsheet_svg_filepath, res_musicsheet_svg_filepath.replace(".svg",f".{ext}")], capture_output=capture_output_of_command, text=True,check=True)
+    res_musicsheet_svg_filepath_fixed=res_musicsheet_svg_filepath.replace('.svg','-1.svg')
+    if os.path.exists(res_musicsheet_svg_filepath_fixed):
+      print(f"converting {res_musicsheet_svg_filepath_fixed} to {converted_file}")
+    else:
+      #print("Error: Could not find the svg file to convert." + res_musicsheet_svg_filepath_fixed)
+      raise Exception("Error: Could not find the svg file to convert." + res_musicsheet_svg_filepath_fixed)
+    subprocess.run([convert_bin, res_musicsheet_svg_filepath_fixed, converted_file], capture_output=capture_output_of_command, text=True,check=True)
     return converted_file
 
 def _convert_abc_2_midi(res_abc_filepath, res_midi_filepath,abc2midiExecutable = "abc2midi"):
