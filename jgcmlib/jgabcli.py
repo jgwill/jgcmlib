@@ -35,13 +35,13 @@ def pto_post_just_an_abc_file(filepath,musescore_bin = "musescore3",abc2midiExec
   res_audio_filepath=os.path.join(output_dir, filebase.replace(".abc",".mp3"))
   res_musicsheet_svg_filepath=os.path.join(output_dir, filebase.replace(".abc",".svg"))
   
-  jcm._convert_abc_2_midi(filepath, res_midi_filepath,abc2midiExecutable=abc2midiExecutable)
+  res_midi_filepath=jcm._convert_abc_2_midi(filepath, res_midi_filepath,abc2midiExecutable=abc2midiExecutable)
   try:
-    jcm._convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin=musescore_bin)
+    res_audio_filepath=jcm._convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin=musescore_bin)
   except:
     musescore_bin="musescore"
     try:
-      jcm._convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin=musescore_bin)
+     res_audio_filepath= jcm._convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin=musescore_bin)
     except:
       print("Error: Could not convert the midi file to mp3. Something with musescore is not right.")
       sleep(2)
@@ -51,7 +51,8 @@ def pto_post_just_an_abc_file(filepath,musescore_bin = "musescore3",abc2midiExec
   if not os.path.exists(expected_mid_filepath):
     print("Error: convert of the abc file to midi has not worked.")
     return
-  score_path=jcm._convert_midi_2_score(expected_mid_filepath, res_musicsheet_svg_filepath,musescore_bin=musescore_bin,ext=score_ext)
+  #score_path=jcm._convert_midi_2_score(expected_mid_filepath, res_musicsheet_svg_filepath,musescore_bin=musescore_bin,ext=score_ext)
+  score_path=pto__convert_midi_2_score(expected_mid_filepath,musescore_bin=musescore_bin,ext=score_ext)
   return score_path, res_audio_filepath, res_midi_filepath
 
 

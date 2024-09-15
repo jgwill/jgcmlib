@@ -71,7 +71,13 @@ def extract_abc_from_text(text):
     return extracted_abc_notation_from_text
 
 def _convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin = "musescore3", capture_output_of_command=False):
-  subprocess.run([musescore_bin,"-o", res_audio_filepath, res_midi_filepath],capture_output=capture_output_of_command, text=True,check=True)
+  try:
+    subprocess.run([musescore_bin,"-o", res_audio_filepath, res_midi_filepath],capture_output=capture_output_of_command, text=True,check=True)
+    if os.path.exists(res_audio_filepath):
+      return res_audio_filepath
+  except:
+    raise Exception(f"Error: Could not convert the midi file {res_midi_filepath} to mp3 {res_audio_filepath}.")
+    
 
 def _convert_midi_2_score(res_midi_filepath, res_musicsheet_svg_filepath, capture_output_of_command=False,musescore_bin = "musescore3",ext="svg",convert_bin="convert"):
   try:
@@ -102,7 +108,13 @@ def _convert_svg_2_ext(res_musicsheet_svg_filepath, capture_output_of_command, e
     return converted_file
 
 def _convert_abc_2_midi(res_abc_filepath, res_midi_filepath,abc2midiExecutable = "abc2midi"):
-  subprocess.run([abc2midiExecutable, str(res_abc_filepath), "-o", res_midi_filepath],check=True)
+  try:
+    extracted_abc_filepath = str(res_abc_filepath)
+    subprocess.run([abc2midiExecutable, extracted_abc_filepath, "-o", res_midi_filepath],check=True)
+    if os.path.exists(res_midi_filepath):
+      return res_midi_filepath
+  except:
+    raise Exception(f"Error: Could not convert the abc file {extracted_abc_filepath} to midi {res_midi_filepath}.")
 
 def newsc_namespace_suffix(prefix, use_tlider=True):
   ts_or_tlid = _newts_suffix(use_tlider)
