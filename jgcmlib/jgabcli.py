@@ -67,7 +67,8 @@ def main():
         abc_filename = extract_abc_from_json_to_abc_file(args.inputfile)
       except:
         print("Error: Could not read the json file.")
-        return
+        #raise Exception("Error: Could not read the json file.")
+        exit(1)
           
            
     #print("Only .abc files are supported for now.")
