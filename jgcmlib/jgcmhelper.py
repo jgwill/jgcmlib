@@ -74,6 +74,7 @@ def extract_abc_from_text(text):
     return extracted_abc_notation_from_text
 
 def _convert_midi_to_mp3(res_midi_filepath, res_audio_filepath,musescore_bin = "musescore3", capture_output_of_command=False):
+  result = None
   try:
     
     
@@ -132,6 +133,7 @@ def _convert_svg_2_ext(res_musicsheet_svg_filepath, capture_output_of_command, e
       raise Exception(f"Error: Could not convert the svg file {res_musicsheet_svg_filepath} to {ext} file.")
 
 def _convert_abc_2_midi(res_abc_filepath, res_midi_filepath,abc2midiExecutable = "abc2midi", capture_output_of_command=False):
+  result = None
   try:
     extracted_abc_filepath = str(res_abc_filepath)
     result=subprocess.run([abc2midiExecutable, extracted_abc_filepath, "-o", res_midi_filepath],capture_output=capture_output_of_command, stdout=DEVNULL, stderr=DEVNULL,check=True)
